@@ -59,6 +59,6 @@ data class Sys(
 
 
 
-data class AirQuality(
+data class AirPollutionResponse(
     val aqi: Double // Índice de Qualidade do Ar (Air Quality Index - AQI)
 )
