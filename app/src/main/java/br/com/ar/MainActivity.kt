@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -31,7 +32,7 @@ import br.com.ar.ui.theme.ArTheme
                         startDestination = "start"
                     ){
                         composable(route = "start"){ LoginScreen(navController)}
-                        composable(route = "aprenda"){ Aprenda()}
+                        composable(route = "aprenda"){ Aprenda(navController)}
                         composable(route = "escolha"){ EscolhaCidade(navController) }
                     }
                 }
