@@ -20,10 +20,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun EscolhaCidade(navController: NavController) {
     val entradaCidade = remember { mutableStateOf("") }
+
+    var WeatherState by remember {
+        mutableStateOf<WeatherResponse?>(null)
+    }
 
     Column(
         modifier = Modifier
@@ -50,11 +59,17 @@ fun EscolhaCidade(navController: NavController) {
                 .padding(horizontal = 16.dp)
         )
 
-        // Card para informações sobre a qualidade do ar
-        AirQualityCard()
+        WeatherState?.let { weather ->
+            CardWeather(weather = weather)
 
-        // Card para informações sobre a temperatura
-        TemperatureCard()
+            // Card para informações sobre a qualidade do ar
+            AirQualityCard(weather = weather)
+
+            // Card para informações sobre a temperatura
+
+            TemperatureCard(weather = weather)
+        }
+
 
         Button(
             onClick = { navController.navigate("start") },
@@ -63,11 +78,38 @@ fun EscolhaCidade(navController: NavController) {
         ) {
             Text(text = "Voltar", fontSize = 20.sp, color = Color.Blue)
         }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = {
+                val call = RetrofitFactory().getWeatherService().getWeather(city = cityState)
+
+                call.enqueue(object : Callback<WeatherResponse> {
+                    override fun onResponse(
+                        call: Call<WeatherResponse>,
+                        response: Response<WeatherResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            WeatherState = response.body()!!
+                        } else {
+                            // Tratar resposta sem sucesso (códigos HTTP diferentes de 2xx)
+                            Log.e("API Error", "Erro na resposta: ${response.body()}")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
+                        // Tratar falha na requisição
+                        Log.e("API Error", "Falha na requisição: ${t.message}", t)
+                    }
+                })
+            }) {
+                Icon(imageVector = Icons.Default.Search, contentDescription = "")
+            }
+        }
     }
 }
 
 @Composable
-fun AirQualityCard() {
+fun AirQualityCard(weather: WeatherResponse) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -90,7 +132,7 @@ fun AirQualityCard() {
 }
 
 @Composable
-fun TemperatureCard() {
+fun TemperatureCard(weather: WeatherResponse) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -105,9 +147,13 @@ fun TemperatureCard() {
         )
 
         Text(
-            text = "25°C", // Aqui você pode adicionar a informação real da temperatura
+            text = "Temp: ${weather.main.temp}", // Aqui você pode adicionar a informação real da temperatura
             fontSize = 18.sp,
             color = Color.Black
         )
     }
 }
+
+
+
+
