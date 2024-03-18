@@ -38,8 +38,14 @@ import retrofit2.Response
 fun EscolhaCidade(navController: NavController) {
     val entradaCidade = remember { mutableStateOf("") }
 
-    var weatherState by remember {
-        mutableStateOf<WeatherResponse?>(null)
+    var WeatherState by remember { mutableStateOf<WeatherResponse?>(null) }
+    var AirState by remember { mutableStateOf<AirResponse?>(null) }
+
+    // Chamando a função fetchAir sempre que WeatherState é atualizado
+    LaunchedEffect(WeatherState) {
+        WeatherState?.let { weather ->
+            fetchAir(weather.coord.lat, weather.coord.lon) { response -> AirState = response }
+        }
     }
 
     Column(
@@ -83,26 +89,7 @@ fun EscolhaCidade(navController: NavController) {
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = {
-                val call = RetrofitFactory().getWeatherService().getWeather(city = entradaCidade.value)
-
-                call.enqueue(object : Callback<WeatherResponse> {
-                    override fun onResponse(
-                        call: Call<WeatherResponse>,
-                        response: Response<WeatherResponse>
-                    ) {
-                        if (response.isSuccessful) {
-                            weatherState = response.body()
-                        } else {
-                            Log.e("API Error", "Erro na resposta: ${response.message()}")
-                        }
-                    }
-
-                    override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                        Log.e("API Error", "Falha na requisição: ${t.message}", t)
-                    }
-                })
-            }) {
+            IconButton(onClick = { fetchWeather(cityState) { response -> WeatherState = response } }) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = "")
             }
         }
@@ -153,4 +140,42 @@ fun TemperatureCard(weather: WeatherResponse) {
             color = Color.Black
         )
     }
+}
+
+// Função lambda que aceita uma função de retorno de chamada como argumento
+fun fetchWeather(cityState: String, callback: (WeatherResponse) -> Unit) {
+    val call = RetrofitFactory().getWeatherService().getWeather(city = cityState)
+
+    call.enqueue(object : Callback<WeatherResponse> {
+        override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
+            if (response.isSuccessful) {
+                response.body()?.let { callback(it) }
+            } else {
+                Log.e("API Error", "Erro na resposta: ${response.body()}")
+            }
+        }
+
+        override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
+            Log.e("API Error", "Falha na requisição: ${t.message}", t)
+        }
+    })
+}
+
+// Função lambda que aceita uma função de retorno de chamada como argumento e recebe lat e lon como parâmetros adicionais
+fun fetchAir(lat: Double, lon: Double, callback: (AirResponse) -> Unit) {
+    val call = RetrofitFactory().getWeatherService().getAir(lat = lat, lon = lon)
+
+    call.enqueue(object : Callback<AirResponse> {
+        override fun onResponse(call: Call<AirResponse>, response: Response<AirResponse>) {
+            if (response.isSuccessful) {
+                response.body()?.let { callback(it) }
+            } else {
+                Log.e("API Error", "Erro na resposta: ${response.body()}")
+            }
+        }
+
+        override fun onFailure(call: Call<AirResponse>, t: Throwable) {
+            Log.e("API Error", "Falha na requisição: ${t.message}", t)
+        }
+    })
 }

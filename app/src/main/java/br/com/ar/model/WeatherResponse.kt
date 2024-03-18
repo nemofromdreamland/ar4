@@ -1,4 +1,4 @@
-package br.com.messias.weatherapi.model
+package br.com.ar.model
 
 data class WeatherResponse(
     val coord: Coord,
