@@ -1,14 +1,20 @@
 package br.com.ar.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -22,6 +28,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import br.com.messias.weatherapi.model.WeatherResponse
+import br.com.messias.weatherapi.service.RetrofitFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -60,7 +68,7 @@ fun EscolhaCidade(navController: NavController) {
         )
 
         WeatherState?.let { weather ->
-            CardWeather(weather = weather)
+
 
             // Card para informações sobre a qualidade do ar
             AirQualityCard(weather = weather)
@@ -81,7 +89,7 @@ fun EscolhaCidade(navController: NavController) {
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = {
-                val call = RetrofitFactory().getWeatherService().getWeather(city = cityState)
+                val call = RetrofitFactory().getWeatherService().getWeather(city = entradaCidade)
 
                 call.enqueue(object : Callback<WeatherResponse> {
                     override fun onResponse(
@@ -124,7 +132,7 @@ fun AirQualityCard(weather: WeatherResponse) {
         )
 
         Text(
-            text = "Boa", // Aqui você pode adicionar a informação real da qualidade do ar
+            text = "Temp: ${weather.main.temp}", // Aqui você pode adicionar a informação real da qualidade do ar
             fontSize = 18.sp,
             color = Color.Black
         )
