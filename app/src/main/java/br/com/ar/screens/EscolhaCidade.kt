@@ -18,16 +18,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import br.com.messias.weatherapi.model.WeatherResponse
 import br.com.messias.weatherapi.service.RetrofitFactory
 import retrofit2.Call
@@ -38,7 +38,7 @@ import retrofit2.Response
 fun EscolhaCidade(navController: NavController) {
     val entradaCidade = remember { mutableStateOf("") }
 
-    var WeatherState by remember {
+    var weatherState by remember {
         mutableStateOf<WeatherResponse?>(null)
     }
 
@@ -59,7 +59,7 @@ fun EscolhaCidade(navController: NavController) {
         TextField(
             value = entradaCidade.value,
             onValueChange = { entradaCidade.value = it },
-            label = { Text("Nome da cidade") }, // Adicione um rótulo para o campo
+            label = { Text("Nome da cidade") },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
@@ -67,17 +67,12 @@ fun EscolhaCidade(navController: NavController) {
                 .padding(horizontal = 16.dp)
         )
 
-        WeatherState?.let { weather ->
+        weatherState?.let { weather ->
 
-
-            // Card para informações sobre a qualidade do ar
             AirQualityCard(weather = weather)
-
-            // Card para informações sobre a temperatura
 
             TemperatureCard(weather = weather)
         }
-
 
         Button(
             onClick = { navController.navigate("start") },
@@ -89,7 +84,7 @@ fun EscolhaCidade(navController: NavController) {
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = {
-                val call = RetrofitFactory().getWeatherService().getWeather(city = entradaCidade)
+                val call = RetrofitFactory().getWeatherService().getWeather(city = entradaCidade.value)
 
                 call.enqueue(object : Callback<WeatherResponse> {
                     override fun onResponse(
@@ -97,15 +92,13 @@ fun EscolhaCidade(navController: NavController) {
                         response: Response<WeatherResponse>
                     ) {
                         if (response.isSuccessful) {
-                            WeatherState = response.body()!!
+                            weatherState = response.body()
                         } else {
-                            // Tratar resposta sem sucesso (códigos HTTP diferentes de 2xx)
-                            Log.e("API Error", "Erro na resposta: ${response.body()}")
+                            Log.e("API Error", "Erro na resposta: ${response.message()}")
                         }
                     }
 
                     override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                        // Tratar falha na requisição
                         Log.e("API Error", "Falha na requisição: ${t.message}", t)
                     }
                 })
@@ -161,7 +154,3 @@ fun TemperatureCard(weather: WeatherResponse) {
         )
     }
 }
-
-
-
-
