@@ -125,7 +125,7 @@ fun AirQualityCard(weather: WeatherResponse) {
         )
 
         Text(
-            text = "Temp: ${weather.main.temp}", // Aqui você pode adicionar a informação real da qualidade do ar
+            text = "AQI: ${"201.94"}", // Aqui você pode adicionar a informação real da qualidade do ar
             fontSize = 18.sp,
             color = Color.Black
         )

@@ -56,3 +56,9 @@ data class Sys(
     val sunset: Long,
     val timezone: Int
 )
+
+
+
+data class AirQuality(
+    val aqi: Double // Índice de Qualidade do Ar (Air Quality Index - AQI)
+)
