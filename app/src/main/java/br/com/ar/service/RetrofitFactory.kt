@@ -1,5 +1,6 @@
 package br.com.messias.weatherapi.service
 
+import br.com.ar.service.WeatherService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

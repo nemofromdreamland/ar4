@@ -1,7 +1,8 @@
 package br.com.ar.service
 
 import br.com.ar.model.WeatherResponse
-import br.com.ar.model.AirQuality
+
+import br.com.ar.model.AirResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

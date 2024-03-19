@@ -18,6 +18,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,7 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import br.com.messias.weatherapi.model.WeatherResponse
+import br.com.ar.model.AirResponse
+import br.com.ar.model.WeatherResponse
 import br.com.messias.weatherapi.service.RetrofitFactory
 import retrofit2.Call
 import retrofit2.Callback
@@ -73,9 +76,9 @@ fun EscolhaCidade(navController: NavController) {
                 .padding(horizontal = 16.dp)
         )
 
-        weatherState?.let { weather ->
+        WeatherState?.let { weather ->
 
-            AirQualityCard(weather = weather)
+            AirQualityCard(airState = AirState)
 
             TemperatureCard(weather = weather)
         }
@@ -89,7 +92,7 @@ fun EscolhaCidade(navController: NavController) {
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = { fetchWeather(cityState) { response -> WeatherState = response } }) {
+            IconButton(onClick = { fetchWeather(entradaCidade) { response -> WeatherState = response } }) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = "")
             }
         }
@@ -97,7 +100,7 @@ fun EscolhaCidade(navController: NavController) {
 }
 
 @Composable
-fun AirQualityCard(weather: WeatherResponse) {
+fun AirQualityCard(airState: AirResponse?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -105,17 +108,15 @@ fun AirQualityCard(weather: WeatherResponse) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = "Qualidade do Ar:",
-            fontSize = 18.sp,
-            color = Color.Black
-        )
+        if (airState != null) {
+            Text(
+                text = "Qualidade do Ar:${airState.list.firstOrNull()?.main?.aqi ?: "Não disponível"}\"",
+                fontSize = 18.sp,
+                color = Color.Black
+            )
+        }
 
-        Text(
-            text = "AQUI: ${"201.94"}", // Aqui você pode adicionar a informação real da qualidade do ar
-            fontSize = 18.sp,
-            color = Color.Black
-        )
+
     }
 }
 
@@ -143,15 +144,15 @@ fun TemperatureCard(weather: WeatherResponse) {
 }
 
 // Função lambda que aceita uma função de retorno de chamada como argumento
-fun fetchWeather(cityState: String, callback: (WeatherResponse) -> Unit) {
-    val call = RetrofitFactory().getWeatherService().getWeather(city = cityState)
+fun fetchWeather(cityState: MutableState<String>, callback: (WeatherResponse) -> Unit) {
+    val call = RetrofitFactory().getWeatherService().getWeather(city = cityState.value)
 
     call.enqueue(object : Callback<WeatherResponse> {
         override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
             if (response.isSuccessful) {
                 response.body()?.let { callback(it) }
             } else {
-                Log.e("API Error", "Erro na resposta: ${response.body()}")
+                Log.e("API Error", "Erro na resposta: ${response.message()}")
             }
         }
 
@@ -170,7 +171,7 @@ fun fetchAir(lat: Double, lon: Double, callback: (AirResponse) -> Unit) {
             if (response.isSuccessful) {
                 response.body()?.let { callback(it) }
             } else {
-                Log.e("API Error", "Erro na resposta: ${response.body()}")
+                Log.e("API Error", "Erro na resposta: ${response.message()}")
             }
         }
 
