@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 
+
+
 @Composable
 fun Aprenda(navController: NavController) {
     val scrollState = rememberScrollState()
@@ -28,9 +30,6 @@ fun Aprenda(navController: NavController) {
             .padding(32.dp)
             .verticalScroll(state = scrollState)
     ) {
-        // Adicionar a animação das nuvens antes do conteúdo da tela de aprendizado
-        AnimatedClouds()
-
         // Conteúdo da tela de aprendizado
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -43,7 +42,7 @@ fun Aprenda(navController: NavController) {
                 color = Color.White,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
+            // PRIMEIRA PARTE
             Button(
                 onClick = { navController.navigate("aprenda")  },
                 colors = ButtonDefaults.buttonColors(Color.White),
@@ -84,21 +83,139 @@ fun Aprenda(navController: NavController) {
                         fontSize = 18.sp,
                         color = Color.Blue
                     )
+
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp)) //espaço entre as Surfaces
+            // FIM PRIMEIRA PARTE
+            // SEGUNDA PARTE INICIO
 
-            // Botão de voltar adicionado abaixo do card
+            Button(
+                onClick = { navController.navigate("aprenda")  },
+                colors = ButtonDefaults.buttonColors(Color.White),
+                modifier = Modifier.padding(bottom = 16.dp)
+            ) {
+                Text(
+                    text = "IMPORTÂNCIA DE MEDIR A QUALIDADE DO AR",
+                    fontSize = 20.sp,
+                    color = Color.Blue
+                )
+            }
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color.White,
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+
+                    Text(
+                        text = "Medimos a qualidade do ar para entender os níveis de poluição atmosférica em uma determinada área.",
+                        fontSize = 18.sp,
+                        color = Color.Blue,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+
+                    Text(
+                        text = "Isso nos ajuda a identificar fontes de poluentes, avaliar riscos para a saúde pública e tomar medidas para reduzir a poluição e proteger a saúde das pessoas e o meio ambiente.",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Blue,
+                        modifier = Modifier.padding(bottom = 16.dp)
+
+                    )
+                    Text(
+                        text = "A medição da qualidade do ar é essencial para garantir um ambiente saudável e sustentável para todos.",
+                        fontSize = 18.sp,
+                        color = Color.Blue,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp)) //espaço entre as Surfaces
+            // FIM SEGUNDA PARTE
+            // TERCEIRA PARTE INICIO
+
+            Button(
+                onClick = { navController.navigate("aprenda")  },
+                colors = ButtonDefaults.buttonColors(Color.White),
+                modifier = Modifier.padding(bottom = 16.dp)
+            ) {
+                Text(
+                    text = "COMO MONITORAR A QUALIDADE DO AR?",
+                    fontSize = 20.sp,
+                    color = Color.Blue
+                )
+            }
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color.White,
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        text = "Monitoramento Direto: ",
+                        fontSize = 18.sp,
+                        color = Color.Blue,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text ="Equipamentos específicos para medir a concentração de poluentes no ar ",
+                        fontSize = 18.sp,
+                        color = Color.Blue,
+                        modifier = Modifier.padding(bottom = 16.dp)
+
+                    )
+                    Text(
+                        text = "Monitoramento Remoto: ",
+                        fontSize = 18.sp,
+                        color = Color.Blue,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "Satélites e drones para monitoraram a qualidade do ar em áreas extensas ou de difícil acesso.",
+                        fontSize = 18.sp,
+                        color = Color.Blue,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    Text(
+                        text = "Modelagem Computacional: ",
+                        fontSize = 18.sp,
+                        color = Color.Blue,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text ="Modelos matemáticos para simulam a dispersão de poluentes na atmosfera e fazem a previsão da qualidade do ar em determinadas áreas.",
+                        fontSize = 18.sp,
+                        color = Color.Blue,
+                        modifier = Modifier.padding(bottom = 16.dp)
+
+                    )
+
+                    Text(
+                        text = "O Índice de Qualidade do Ar (AQI - Air Quality Index) é uma medida padronizada que quantifica a qualidade do ar com base na concentração de poluentes atmosféricos. ",
+                        fontSize = 18.sp,
+                        color = Color.Blue,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp)) //espaço entre as Surfaces
+
+            // Botão de voltar
             Button(
                 onClick = { navController.navigate("start") },
                 colors = ButtonDefaults.buttonColors(Color.White),
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 16.dp)
+                modifier = Modifier.align(Alignment.CenterHorizontally),
             ) {
                 Text(text = "Voltar", fontSize = 20.sp, color = Color.Blue)
             }
+            // Adicionando a animação das nuvens no final da tela
+            AnimatedClouds()
         }
     }
 }
-
-
