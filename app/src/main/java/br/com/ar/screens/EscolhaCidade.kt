@@ -102,7 +102,7 @@ fun EscolhaCidade(navController: NavController) {
         }
 
         // Adicionando a animação das nuvens no final da tela
-        AnimatedClouds(Modifier.fillMaxSize())
+        AnimatedClouds()
 
     }
 }

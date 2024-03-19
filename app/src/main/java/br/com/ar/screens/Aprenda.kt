@@ -29,9 +29,7 @@ fun Aprenda(navController: NavController) {
             .verticalScroll(state = scrollState)
     ) {
         // Adicionar a animação das nuvens antes do conteúdo da tela de aprendizado
-        AnimatedClouds(
-            modifier = Modifier.fillMaxSize()
-        )
+        AnimatedClouds()
 
         // Conteúdo da tela de aprendizado
         Column(

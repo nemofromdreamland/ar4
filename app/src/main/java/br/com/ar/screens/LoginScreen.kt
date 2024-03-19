@@ -17,7 +17,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-
 @Composable
 fun LoginScreen(navController: NavController) {
     Box(
@@ -26,7 +25,7 @@ fun LoginScreen(navController: NavController) {
             .background(Color(0xFF14CCED))
             .padding(32.dp)
     ) {
-        AnimatedClouds(Modifier.fillMaxSize())
+        AnimatedClouds()
 
         // Conteúdo da tela de login
         Column(
@@ -73,7 +72,7 @@ fun LoginScreen(navController: NavController) {
 }
 
 @Composable
-fun AnimatedClouds(modifier: Modifier) {
+fun AnimatedClouds() {
     val infiniteTransition = rememberInfiniteTransition()
     val cloud1XPosition by infiniteTransition.animateFloat(
         initialValue = 500f, // Iniciar da posição mais à direita
