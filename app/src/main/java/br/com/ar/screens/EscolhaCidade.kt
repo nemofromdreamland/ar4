@@ -65,19 +65,27 @@ fun EscolhaCidade(navController: NavController) {
             modifier = Modifier.align(Alignment.Start)
         )
 
-        TextField(
-            value = entradaCidade.value,
-            onValueChange = { entradaCidade.value = it },
-            label = { Text("Nome da cidade") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .background(Color.White)
-                .padding(horizontal = 16.dp)
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            TextField(
+                value = entradaCidade.value,
+                onValueChange = { entradaCidade.value = it },
+                label = { Text("Nome da cidade") },
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp)
+                    .background(Color.White)
+                    .padding(horizontal = 16.dp)
+            )
+
+            IconButton(
+                onClick = { fetchWeather(entradaCidade) { response -> WeatherState = response } },
+                modifier = Modifier.padding(end = 16.dp) // Adiciona espaçamento entre o TextField e o IconButton
+            ) {
+                Icon(imageVector = Icons.Default.Search, contentDescription = "")
+            }
+        }
 
         WeatherState?.let { weather ->
-
             AirQualityCard(airState = AirState)
 
             TemperatureCard(weather = weather)
@@ -90,14 +98,9 @@ fun EscolhaCidade(navController: NavController) {
         ) {
             Text(text = "Voltar", fontSize = 20.sp, color = Color.Blue)
         }
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = { fetchWeather(entradaCidade) { response -> WeatherState = response } }) {
-                Icon(imageVector = Icons.Default.Search, contentDescription = "")
-            }
-        }
     }
 }
+
 
 @Composable
 fun AirQualityCard(airState: AirResponse?) {
