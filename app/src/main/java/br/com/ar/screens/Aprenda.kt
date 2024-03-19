@@ -17,8 +17,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 
-
-
 @Composable
 fun Aprenda(navController: NavController) {
     val scrollState = rememberScrollState()
@@ -30,6 +28,11 @@ fun Aprenda(navController: NavController) {
             .padding(32.dp)
             .verticalScroll(state = scrollState)
     ) {
+        // Adicionar a animação das nuvens antes do conteúdo da tela de aprendizado
+        AnimatedClouds(
+            modifier = Modifier.fillMaxSize()
+        )
+
         // Conteúdo da tela de aprendizado
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -83,10 +86,21 @@ fun Aprenda(navController: NavController) {
                         fontSize = 18.sp,
                         color = Color.Blue
                     )
-
-
                 }
+            }
+
+            // Botão de voltar adicionado abaixo do card
+            Button(
+                onClick = { navController.navigate("start") },
+                colors = ButtonDefaults.buttonColors(Color.White),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 16.dp)
+            ) {
+                Text(text = "Voltar", fontSize = 20.sp, color = Color.Blue)
             }
         }
     }
 }
+
+

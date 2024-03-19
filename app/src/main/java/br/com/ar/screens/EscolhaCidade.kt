@@ -39,8 +39,8 @@ import retrofit2.Response
 
 @Composable
 fun EscolhaCidade(navController: NavController) {
+    // Declaração do estado para controlar a entrada da cidade e os dados do tempo e qualidade do ar
     val entradaCidade = remember { mutableStateOf("") }
-
     var WeatherState by remember { mutableStateOf<WeatherResponse?>(null) }
     var AirState by remember { mutableStateOf<AirResponse?>(null) }
 
@@ -58,6 +58,7 @@ fun EscolhaCidade(navController: NavController) {
             .padding(32.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        // Texto explicativo e campo de entrada da cidade
         Text(
             text = "Digite o nome da cidade:",
             fontSize = 20.sp,
@@ -79,18 +80,19 @@ fun EscolhaCidade(navController: NavController) {
 
             IconButton(
                 onClick = { fetchWeather(entradaCidade) { response -> WeatherState = response } },
-                modifier = Modifier.padding(end = 16.dp) // Adiciona espaçamento entre o TextField e o IconButton
+                modifier = Modifier.padding(end = 16.dp)
             ) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = "")
             }
         }
 
+        // Card da qualidade do ar e do tempo
         WeatherState?.let { weather ->
             AirQualityCard(airState = AirState)
-
             TemperatureCard(weather = weather)
         }
 
+        // Botão de voltar
         Button(
             onClick = { navController.navigate("start") },
             colors = ButtonDefaults.buttonColors(Color.White),
@@ -98,8 +100,13 @@ fun EscolhaCidade(navController: NavController) {
         ) {
             Text(text = "Voltar", fontSize = 20.sp, color = Color.Blue)
         }
+
+        // Adicionando a animação das nuvens no final da tela
+        AnimatedClouds(Modifier.fillMaxSize())
+
     }
 }
+
 
 
 @Composable
